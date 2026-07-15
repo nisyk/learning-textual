@@ -1,0 +1,11 @@
+# Ignore python-venv
+venv/
+
+# Ignore PyCharm configurations
+.idea/
+
+# Ignore Python compiled bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
