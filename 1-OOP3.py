@@ -58,8 +58,8 @@ Common Mistakes:
     - Forgetting the Setter: Defining @property but forgetting @<attribute>.setter, then trying to assign a value to it later. Why it happens: A property without a setter is strictly read-only.
     - Mixing up Methods and Properties: Trying to call a property like a method (obj.voltage()) or accessing a method like a property (obj.status).
 
-Challenge:
-We need to build a safe motor controller class.
+Challenge: We need to build a safe motor controller class.
+
 Requirements:
 
     - Create a base class HardwarePeripheral.
@@ -71,4 +71,39 @@ Requirements:
     - Override the status() method in Motor. It should call super().status() and append " | Spinning at [rpm] RPM" to the end.
     - Execution: Instantiate a Motor. Set its current to a safe value and print its status. Then, use a try...except block to attempt setting the current above the max limit, catching the ValueError and printing the error message.
 '''
+
+class HardwarePeripheral:
+    def __init__(self, name: str, max_current_ma: int):
+        self.name: str = name
+        self.max_current_ma: int = max_current_ma
+
+    @property
+    def current_draw_ma(self) -> int:
+        return self._current_draw_ma
+
+    @current_draw_ma.setter
+    def current_draw_ma(self, new_current_draw_ma:int) -> None:
+        if new_current_draw_ma > self.max_current_ma:
+            raise ValueError("Overcurrent protection triggered!")
+        self._current_draw_ma = new_current_draw_ma
+
+    def status(self) -> str:
+        return f"Pheriperal [{self.name}] drawing [{self.current_draw_ma} mA]"
+
+class Motor(HardwarePeripheral):
+    def __init__(self, name: str, max_current_ma: int, rpm: int):
+        super().__init__(name, max_current_ma)
+        self.rpm: int = rpm
+
+    def status(self) -> str:
+        base = super().status()
+        return f"{base} | Spinning at [{self.rpm}] RPM"
+
+motor1 = Motor(name='Sanyo', max_current_ma=10, rpm=100)
+try:
+    motor1.current_draw_ma = 15
+    print(motor1.status())
+except ValueError as e:
+    print(e)
+
 
