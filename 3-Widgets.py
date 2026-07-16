@@ -4,7 +4,7 @@ Master the Static widget, learn how to target specific widgets using IDs, and up
 '''
 
 '''
-- The Static Widget: The workhorse of Textual. Despite the name, it doesn't just hold static text. It can render plain text, rich text, and even Markdown. 
+- The Static Widget: The workhorse of Textual. Despite the name, it doesn't just hold static text. It can render plain text, rich text, and even Markdown.
 - Widget IDs: Just like HTML or CSS, you can assign an id to a widget (e.g., Static("Hello", id="my_label")). This allows you to target it later.
 - query_one(): A DOM traversal method. self.query_one("#my_label", Static) searches the UI tree for the widget with the ID my_label and ensures it is of type Static.
 - update(): The correct method to change the content of a Static widget. Never try to assign directly to a .text or .value attribute on a Static widget; it won't trigger a redraw. You must use widget.update("new content").
@@ -23,7 +23,7 @@ class TelemetryScreen(App):
     async def on_mount(self) -> None:
         # Simulate a 1-second hardware boot delay
         await asyncio.sleep(1)
-        
+
         # Target the widget by its ID and update its content
         display = self.query_one("#sensor_display", Static)
         display.update("Sensor online: 22.5°C")
@@ -68,7 +68,7 @@ class SensorDashboard(App):
     def compose(self) -> ComposeResult:
         yield Static("Awaiting data...", id="temp_readout")
 
-    @work
+    @work # Use decorator to make async don't interupt compose()
     async def on_mount(self) -> None:
         temp_reading = self.query_one("#temp_readout", Static)
         await asyncio.sleep(2)
